@@ -1,6 +1,34 @@
-es = 1000 #число шаров, задаётся пользователем"
-ek = 100 #число столбцов, задаётся пользователем"
-nk = 50 #номер конкретного столбца, вводится пользователем"
+import telebot
+API_TOKEN = ''
+bot = telebot.TeleBot(API_TOKEN)
+controller = {}
+
+@bot.message_handler(commands=['start'])
+
+INVALID_CHOICE = "Введите, пожалуйста, число шаров, которых вы хотите распределить."
+@bot.message_handler(func=lambda message: True)
+def echo_message(message):
+    text = message.text
+    bot.reply_to(message, text)
+bot.polling()
+es = text #число шаров, задаётся пользователем"
+
+INVALID_CHOICE = "Введите, пожалуйста, число столбцов, по которым вы хотите распределить шары."
+@bot.message_handler(func=lambda message: True)
+def echo_message(message):
+    text = message.text
+    bot.reply_to(message, text)
+bot.polling()
+ek = text #число столбцов, задаётся пользователем"
+
+INVALID_CHOICE = "Введите, пожалуйста, номер конкретного столбца, который вы хотите посмотреть."
+@bot.message_handler(func=lambda message: True)
+def echo_message(message):
+    text = message.text
+    bot.reply_to(message, text)
+bot.polling()
+nk = text #номер конкретного столбца, вводится пользователем"
+
 n = ek-1 #глубина счёта"
 e = 2**n #суммарный биноминальный коэффициент для глубины"
 
