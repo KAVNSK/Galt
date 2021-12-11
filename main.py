@@ -1,9 +1,28 @@
 import telebot
-API_TOKEN = ''
+API_TOKEN = '2076254824:AAGO_6uzM5BDGrMCgQMHxVnF9VLgV5IGFBk'
 bot = telebot.TeleBot(API_TOKEN)
+import keyboards as kb
 controller = {}
-
 @bot.message_handler(commands=['start'])
+def start_message(message):
+    bot.send_message(message.from_user.id,
+                     """
+                     Это Гальтон-бот! Здесь вы можете посмотерть на конкретное распределение шаров на доске Гальтона!
+                     """,  reply_markup=kb.main_kb)
+    user_id = message.from_user.id
+    controller[user_id] = 'start'
+
+@bot.message_handler(content_types=['text'])
+def start(message):
+    user_id = message.from_user.id
+    user_choice = message.text
+    user_state = controller.get(user_id, 'start') # Если вдруг такой user_id не сохранен, то считаем, что статус = start
+    #answer = 'none'
+    if user_state == 'start':
+        answer = start_handler(user_id, user_choice)
+    if user_state == 'teacher':
+        answer = teacher_handler(user_id, user_choice)
+    bot.send_message(message.from_user.id, answer[0], reply_markup=answer[1]
 
 INVALID_CHOICE = "Введите, пожалуйста, число шаров, которых вы хотите распределить."
 @bot.message_handler(func=lambda message: True)
@@ -13,7 +32,7 @@ def echo_message(message):
 bot.polling()
 es = text #число шаров, задаётся пользователем"
 
-INVALID_CHOICE = "Введите, пожалуйста, число столбцов, по которым вы хотите распределить шары."
+INVALID_CHOICE: str = "Введите, пожалуйста, число столбцов, по которым вы хотите распределить шары."
 @bot.message_handler(func=lambda message: True)
 def echo_message(message):
     text = message.text
@@ -21,7 +40,7 @@ def echo_message(message):
 bot.polling()
 ek = text #число столбцов, задаётся пользователем"
 
-INVALID_CHOICE = "Введите, пожалуйста, номер конкретного столбца, который вы хотите посмотреть."
+INVALID_CHOICE: str = "Введите, пожалуйста, номер конкретного столбца, который вы хотите посмотреть."
 @bot.message_handler(func=lambda message: True)
 def echo_message(message):
     text = message.text
