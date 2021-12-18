@@ -1,8 +1,13 @@
 import telebot
-API_TOKEN = '2076254824:AAGO_6uzM5BDGrMCgQMHxVnF9VLgV5IGFBk'
+import Knopli as kb
+
+API_TOKEN = ''
 bot = telebot.TeleBot(API_TOKEN)
-import knopli as kb
+
 controller = {}
+es = None
+ek = None
+
 @bot.message_handler(commands=['start'])
 def start_message(message):
     bot.send_message(message.from_user.id,
@@ -18,23 +23,39 @@ def start(message):
     user_choice = message.text
     user_state = controller.get(user_id, 'start') # Если вдруг такой user_id не сохранен, то считаем, что статус = start
     #answer = 'none'
-    if user_state == 'start':
-        answer = start_handler(user_id, user_choice)
+    answer = start_handler(user_id, user_choice)
+    if user_state == 'ready_to_play':
+        galton_desk()
+
 
 def start_handler(user_id, user_choice):
+
+    if controller[user_id] == 'ball_count':
+        es = int(user_choice)
+        mes = 'Я получил число шаров = ' + str(es)
+        bot.send_message(user_id, mes)
+
     if user_choice == "Ввести количество шаров":
         INVALID_CHOICE = "Введите, пожалуйста, число шаров, которых вы хотите распределить."
         bot.send_message(user_id, INVALID_CHOICE)
+        controller[user_id] = 'ball_count'
     if user_choice == "Ввести число столбцов":
         INVALID_CHOICE: str = "Введите, пожалуйста, число столбцов, по которым вы хотите распределить шары."
         bot.send_message(user_id, INVALID_CHOICE)
     if user_choice == "Ввести номер интересующего столба":
         INVALID_CHOICE: str = "Введите, пожалуйста, номер конкретного столбца, который вы хотите посмотреть."
         bot.send_message(user_id, INVALID_CHOICE)
-        nomerstolba()
 
-nomerstolba():
+    if es != None and ek != None:
+        controller[user_id] = 'ready_to_play'
 
+def galton_desk():
+    pass
+
+bot.polling()
+#nomerstolba():
+
+'''
 @bot.message_handler(func=lambda message: True)
 def echo_message(message):
 text = message.text
@@ -95,3 +116,4 @@ c= fn/(fk*feach)
 #Рассчёт числа шаров через вероятность
 nsk=es*c/e
 print(nsk)
+'''
